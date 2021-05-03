@@ -11,16 +11,24 @@
 
 </ul>
 
-<div>
+<div class="container-sm">
 
-    <img src="{{ user.image_url }}" class="container-sm img-thumbnail">
+    <img src="{{ user.image_url }}" class="img-thumbnail">
+
 </div>
 
-<form action="/users/{{user.id}}/delete" method="POST">
-    <button class="btn btn-danger">Delete</button>
-</form>
-<form action="/users/{{user.id}}/edit">
-    <button class="btn btn-success">Edit</button>
-</form>
-<a href="/">Go Back</a>
+
+{% endblock %}
+{% block button %}
+<div class="row">
+    <form action="/users/{{user.id}}/delete" method="POST">
+
+        <button class="btn btn-danger m-3">Delete</button>
+    </form>
+    <form action="/users/{{user.id}}/edit">
+        <button class="btn btn-success m-3">Edit</button>
+    </form>
+</div>
+<a href="/" class="col">Go Back</a>
+
 {% endblock %}
