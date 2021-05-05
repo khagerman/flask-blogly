@@ -86,3 +86,10 @@ def edit_user(id):
     db.session.commit()
 
     return redirect("/users")
+
+
+# @app.route("/users/<int:id>/posts/new")
+# def show_post_form(id):
+#     """show form to make new post"""
+#     user = User.query.get_or_404(id)
+#     return render_template("newpost.html", user=user)

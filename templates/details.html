@@ -4,22 +4,22 @@
 {% block content %}
 
 <h1>{{user.first_name}} {{user.last_name}}</h1>
-<ul>
+<div class=row>
+    <div class="col-6">
 
-    <li>First Name:{{user.first_name}}</li>
-    <li>Last Name: {{user.last_name}}</li>
+        <img src="{{ user.image_url }}" class="img-thumbnail profilepic">
 
-</ul>
+    </div>
 
-<div class="container-sm">
+    <ul class="col-3">
 
-    <img src="{{ user.image_url }}" class="img-thumbnail">
+        <li>First Name:{{user.first_name}}</li>
+        <li>Last Name: {{user.last_name}}</li>
+
+    </ul>
+
 
 </div>
-
-
-{% endblock %}
-{% block button %}
 <div class="row">
     <form action="/users/{{user.id}}/delete" method="POST">
 
@@ -29,6 +29,11 @@
         <button class="btn btn-success m-3">Edit</button>
     </form>
 </div>
+<!-- <h2>Posts by user</h2> -->
+
+
+
+
 <a href="/" class="col">Go Back</a>
 
 {% endblock %}

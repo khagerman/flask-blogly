@@ -63,4 +63,4 @@ class UserTesting(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("<li><a href='users/2'>George The Monkey</a></li>", html)
+            self.assertIn('<li><a href="users/2">George The Monkey</a></li>', html)
