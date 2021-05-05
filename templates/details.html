@@ -10,13 +10,19 @@
         <img src="{{ user.image_url }}" class="img-thumbnail profilepic">
 
     </div>
-
+    <h2>Posts</h2>
     <ul class="col-3">
-
-        <li>First Name:{{user.first_name}}</li>
-        <li>Last Name: {{user.last_name}}</li>
-
+        {% for post in user.posts %}
+        <li>
+            <a href="/posts/{{ post.id}}">{{ post.title }}</a>
+            <small>{{ post.created_at}}</small>
+        </li>
+        {% endfor %}
+        <form action="/users/{{user.id}}/posts/new">
+            <button class="btn btn-info m-3">Add a post!</button>
+        </form>
     </ul>
+
 
 
 </div>
@@ -29,7 +35,7 @@
         <button class="btn btn-success m-3">Edit</button>
     </form>
 </div>
-<!-- <h2>Posts by user</h2> -->
+
 
 
 

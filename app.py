@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogly"
@@ -88,8 +88,56 @@ def edit_user(id):
     return redirect("/users")
 
 
-# @app.route("/users/<int:id>/posts/new")
-# def show_post_form(id):
-#     """show form to make new post"""
-#     user = User.query.get_or_404(id)
-#     return render_template("newpost.html", user=user)
+# posts
+@app.route("/users/<int:id>/posts/new")
+def show_post_form(id):
+    """show form to make new post"""
+    user = User.query.get_or_404(id)
+    return render_template("/posts/newpost.html", user=user)
+
+
+@app.route("/users/<int:id>/posts/new", methods=["POST"])
+def post_post(id):
+    """post new post"""
+    user = User.query.get_or_404(id)
+    title = request.form["title"]
+    content = request.form["content"]
+    new_post = Post(title=title, content=content, user=user)
+    db.session.add(new_post)
+    db.session.commit()
+    return redirect(f"/users/{id}")
+
+
+@app.route("/posts/<int:id>")
+def view_post(id):
+    """view post"""
+    post = Post.query.get_or_404(id)
+    return render_template("/posts/post_details.html", post=post)
+
+
+@app.route("/posts/<int:id>/edit")
+def edit_post(id):
+    """view edit post page"""
+    post = Post.query.get_or_404(id)
+    return render_template("/posts/edit.html", post=post)
+
+
+@app.route("/posts/<int:id>/edit", methods=["POST"])
+def submit_edit_post(id):
+    """submit edit"""
+    post = Post.query.get_or_404(id)
+    title = request.form["title"]
+    content = request.form["content"]
+    new_post = Post(title=title, content=content, user=user)
+    db.session.add(new_post)
+    db.session.commit()
+    return redirect(f"/posts/{id}", post=post)
+
+
+@app.route("/posts/<int:id>/delete", methods=["POST"])
+def delete_post(id):
+    """delete post from db"""
+    post = User.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect("/users")
