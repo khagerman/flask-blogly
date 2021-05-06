@@ -80,9 +80,13 @@ class PostTesting(TestCase):
         user = User(first_name="Test", last_name="Person")
         db.session.add(user)
         db.session.commit()
-
         self.id = user.id
         self.user = user
+        post = Post(title="Test Post", content="Test test test!", user_id=f"{self.id}")
+        db.session.add(post)
+        db.session.commit()
+        self.post = post
+        self.post.id = post.id
 
     def tearDown(self):
         """Clean up any fouled transaction."""
@@ -103,3 +107,19 @@ class PostTesting(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("well hello there", html)
+
+    def test_edit_post(self):
+        with app.test_client() as client:
+            """test editing of new post"""
+            d = {
+                "title": "well bye",
+                "content": "I am  not a test person. I do not test things.",
+            }
+            resp = client.post(
+                f"/posts/{self.post.id}/edit", data=d, follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("well bye", html)
+            self.assertNotIn("Test Post", html)
