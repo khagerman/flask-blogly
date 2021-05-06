@@ -34,8 +34,8 @@ class Post(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    title = db.Column(db.String(10), nullable=False, unique=False)
-    content = db.Column(db.String(200), nullable=False, unique=False)
+    title = db.Column(db.String(20), nullable=False, unique=False)
+    content = db.Column(db.String(250), nullable=False, unique=False)
 
     created_at = db.Column(
         db.DateTime(timezone=True), default=datetime.datetime.now, nullable=False

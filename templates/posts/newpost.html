@@ -29,22 +29,13 @@
         <button type="submit" class="btn btn-primary">
             Create
         </button>
-        <button action="users/{{user.id}}" class="btn btn-default">
-            Cancel
-        </button>
+
     </div>
 
 </form>
+<a href="/users/{{ user.id }}" class="btn btn-info">Cancel</a>
 </div>
 
 </div>
 </div>
 {% endblock %}
-<!-- <form action="/users/new" method="POST">
-
-    <input type="text" name="first_name" placeholder="First Name" required>
-    <input type="text" name="last_name" placeholder="Last Name" required>
-    <input type="text" name="image_url" placeholder="Image URL">
-    <button class="btn btn-sm btn-secondary">Submit User</button>
-</form> -->
-<!-- <a class="btn btn-sm btn-info" href="/">Back to All Users</a>

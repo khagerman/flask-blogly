@@ -4,10 +4,19 @@
 {% block content %}
 
 <h1>{{user.first_name}} {{user.last_name}}</h1>
-<div class=row>
-    <div class="col-6">
+<div>
+    <div class="row">
 
         <img src="{{ user.image_url }}" class="img-thumbnail profilepic">
+
+
+        <form class="col-1" action="/users/{{user.id}}/edit">
+            <button class="btn btn-success ">Edit</button>
+        </form>
+        <form class="col-1" action="/users/{{user.id}}/delete" method="POST">
+
+            <button class="btn btn-danger ">Delete</button>
+        </form>
 
     </div>
     <h2>Posts</h2>
@@ -26,15 +35,7 @@
 
 
 </div>
-<div class="row">
-    <form action="/users/{{user.id}}/delete" method="POST">
 
-        <button class="btn btn-danger m-3">Delete</button>
-    </form>
-    <form action="/users/{{user.id}}/edit">
-        <button class="btn btn-success m-3">Edit</button>
-    </form>
-</div>
 
 
 

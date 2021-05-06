@@ -126,18 +126,18 @@ def edit_post(id):
 def submit_edit_post(id):
     """submit edit"""
     post = Post.query.get_or_404(id)
-    title = request.form["title"]
-    content = request.form["content"]
-    new_post = Post(title=title, content=content, user=user)
-    db.session.add(new_post)
+    post.title = request.form["title"]
+    post.content = request.form["content"]
+
+    db.session.add(post)
     db.session.commit()
-    return redirect(f"/posts/{id}", post=post)
+    return redirect(f"/posts/{id}")
 
 
 @app.route("/posts/<int:id>/delete", methods=["POST"])
 def delete_post(id):
     """delete post from db"""
-    post = User.query.get_or_404(id)
+    post = Post.query.get_or_404(id)
     db.session.delete(post)
     db.session.commit()
-    return redirect("/users")
+    return redirect(f"/users/{post.user.id}")

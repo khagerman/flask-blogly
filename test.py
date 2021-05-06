@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///user_test"
@@ -22,7 +22,7 @@ class UserTesting(TestCase):
 
     def setUp(self):
         """Add sample user"""
-
+        Post.query.delete()
         User.query.delete()
 
         user = User(first_name="Test", last_name="Person")
@@ -39,6 +39,7 @@ class UserTesting(TestCase):
 
     def test_list_users(self):
         with app.test_client() as client:
+            """test users page loading"""
             resp = client.get("/users")
             html = resp.get_data(as_text=True)
 
@@ -47,6 +48,7 @@ class UserTesting(TestCase):
 
     def test_show_user(self):
         with app.test_client() as client:
+            """test user profile loading"""
             resp = client.get(f"/users/{self.id}")
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
@@ -54,6 +56,7 @@ class UserTesting(TestCase):
 
     def test_add_user(self):
         with app.test_client() as client:
+            """test creation of new user and redirect"""
             d = {
                 "first_name": "George",
                 "last_name": "The Monkey",
@@ -63,4 +66,40 @@ class UserTesting(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('<li><a href="users/2">George The Monkey</a></li>', html)
+            self.assertIn("George The Monkey", html)
+
+
+class PostTesting(TestCase):
+    """Tests for posts"""
+
+    def setUp(self):
+        """Add sample user"""
+        Post.query.delete()
+        User.query.delete()
+
+        user = User(first_name="Test", last_name="Person")
+        db.session.add(user)
+        db.session.commit()
+
+        self.id = user.id
+        self.user = user
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+
+        db.session.rollback()
+
+    def test_add_post(self):
+        with app.test_client() as client:
+            """test creation of new post and redirect"""
+            d = {
+                "title": "well hello there",
+                "content": "I am a test person. I test things. ",
+            }
+            resp = client.post(
+                f"/users/{self.id}/posts/new", data=d, follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("well hello there", html)
