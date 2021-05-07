@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogly"
@@ -141,3 +141,68 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     return redirect(f"/users/{post.user.id}")
+
+
+@app.route("/posts/<int:id>/delete", methods=["POST"])
+def delete_post(id):
+    """delete post from db"""
+    post = Post.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(f"/users/{post.user.id}")
+
+
+@app.route("/posts/<int:id>/delete")
+def delete_post(id):
+    """delete post from db"""
+    post = Post.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(f"/users/{post.user.id}")
+
+
+# tags
+
+
+@app.route("/tags")
+def show_tags():
+    """Show a page with info on all tags"""
+    tags = Tag.query.all()
+    return render_template("/tags/show.html", tags=tags)
+
+@app.route("/tags/new")
+def add_tag_form():
+    """Show a page to add tag"""
+     return render_template("/tags/new.html")
+
+@app.route("/tags/new", methods="POST")
+def add_tag():
+    """Add new tag"""
+    name = request.form["name"]
+    tag = Tag(name=name)
+    db.session.add(tag)
+    db.session.commit()
+    return redirect("/tags", tag=tag)
+
+@app.route("/tags/<int:id>")
+def tag_details():
+    """Show a page with info on a tag"""
+    tag = Post.query.get_or_404(id)
+    return render_template("tags/tag_details.html", tag=tag)
+
+
+@app.route("/tags/<int:id>/edit")
+def tag_details():
+    """Show a page to edit tag"""
+    tag = Post.query.get_or_404(id)
+    return render_template("tags/edit.html", tag=tag)
+
+
+@app.route("/tags/<int:id>/edit", methods="POST")
+def tag_details():
+    """Show a page to edit tag"""
+    tag = Post.query.get_or_404(id)
+    tag.name = request.form["name"]
+    db.session.add(tag)
+    db.session.commit()
+    return redirect("/tags", tag=tag)
