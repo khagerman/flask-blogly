@@ -1,9 +1,23 @@
 {% extends 'base.html' %}
-{% block title %}Post Tags{% endblock %}
+{% block title %}Editing {{tag.name}}{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Tags{{user.first_name}}</h1>
+<h1 class="text-center"> Edit {{tag.name}}</h1>
 
-<a class="btn btn-sm btn-info" href="/">Back to All Users</a>
+<form action="" method="POST">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input type="text" class="form-control" name="name" value="{{tag.name}}" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">
+            Edit
+        </button>
+
+    </div>
+
+</form>
+<a href="/tags" class="btn btn-info">Cancel</a>
+
 
 {% endblock %}

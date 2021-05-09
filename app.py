@@ -93,7 +93,8 @@ def edit_user(id):
 def show_post_form(id):
     """show form to make new post"""
     user = User.query.get_or_404(id)
-    return render_template("/posts/newpost.html", user=user)
+    tags = Tag.query.all()
+    return render_template("/posts/newpost.html", user=user, tags=tags)
 
 
 @app.route("/users/<int:id>/posts/new", methods=["POST"])
@@ -102,7 +103,9 @@ def post_post(id):
     user = User.query.get_or_404(id)
     title = request.form["title"]
     content = request.form["content"]
-    new_post = Post(title=title, content=content, user=user)
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+    new_post = Post(title=title, content=content, user=user, tags=tags)
     db.session.add(new_post)
     db.session.commit()
     return redirect(f"/users/{id}")
@@ -112,14 +115,16 @@ def post_post(id):
 def view_post(id):
     """view post"""
     post = Post.query.get_or_404(id)
-    return render_template("/posts/post_details.html", post=post)
+    tags = Tag.query.all()
+    return render_template("/posts/post_details.html", post=post, tags=tags)
 
 
 @app.route("/posts/<int:id>/edit")
 def edit_post(id):
     """view edit post page"""
     post = Post.query.get_or_404(id)
-    return render_template("/posts/edit.html", post=post)
+    tags = Tag.query.all()
+    return render_template("/posts/edit.html", post=post, tags=tags)
 
 
 @app.route("/posts/<int:id>/edit", methods=["POST"])
@@ -128,31 +133,14 @@ def submit_edit_post(id):
     post = Post.query.get_or_404(id)
     post.title = request.form["title"]
     post.content = request.form["content"]
-
+    tag_ids = [int(num) for num in request.form.getlist("tags")]
+    post.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
     db.session.add(post)
     db.session.commit()
     return redirect(f"/posts/{id}")
 
 
 @app.route("/posts/<int:id>/delete", methods=["POST"])
-def delete_post(id):
-    """delete post from db"""
-    post = Post.query.get_or_404(id)
-    db.session.delete(post)
-    db.session.commit()
-    return redirect(f"/users/{post.user.id}")
-
-
-@app.route("/posts/<int:id>/delete", methods=["POST"])
-def delete_post(id):
-    """delete post from db"""
-    post = Post.query.get_or_404(id)
-    db.session.delete(post)
-    db.session.commit()
-    return redirect(f"/users/{post.user.id}")
-
-
-@app.route("/posts/<int:id>/delete")
 def delete_post(id):
     """delete post from db"""
     post = Post.query.get_or_404(id)
@@ -170,39 +158,52 @@ def show_tags():
     tags = Tag.query.all()
     return render_template("/tags/show.html", tags=tags)
 
+
 @app.route("/tags/new")
 def add_tag_form():
     """Show a page to add tag"""
-     return render_template("/tags/new.html")
+    return render_template("/tags/new.html")
 
-@app.route("/tags/new", methods="POST")
+
+@app.route("/tags/new", methods=["POST"])
 def add_tag():
     """Add new tag"""
     name = request.form["name"]
     tag = Tag(name=name)
     db.session.add(tag)
     db.session.commit()
-    return redirect("/tags", tag=tag)
+    return redirect("/tags")
+
 
 @app.route("/tags/<int:id>")
-def tag_details():
+def tag_details(id):
     """Show a page with info on a tag"""
-    tag = Post.query.get_or_404(id)
-    return render_template("tags/tag_details.html", tag=tag)
+    tag = Tag.query.get_or_404(id)
+    post = Post.query.all()
+    return render_template("tags/tag_details.html", tag=tag, post=post)
 
 
 @app.route("/tags/<int:id>/edit")
-def tag_details():
+def tag_edit_form(id):
     """Show a page to edit tag"""
-    tag = Post.query.get_or_404(id)
+    tag = Tag.query.get_or_404(id)
     return render_template("tags/edit.html", tag=tag)
 
 
-@app.route("/tags/<int:id>/edit", methods="POST")
-def tag_details():
+@app.route("/tags/<int:id>/edit", methods=["POST"])
+def edit_tag(id):
     """Show a page to edit tag"""
     tag = Post.query.get_or_404(id)
     tag.name = request.form["name"]
     db.session.add(tag)
     db.session.commit()
-    return redirect("/tags", tag=tag)
+    return redirect("/tags")
+
+
+@app.route("/tagss/<int:id>/delete", methods=["POST"])
+def delete_tag(id):
+    """delete post from db"""
+    tag = Post.query.get_or_404(id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect("/tags")

@@ -5,7 +5,7 @@
 <h1 class="text-center">Tags</h1>
 <ul>
     {% for tag in tags %}
-    <li><a href="tags/{{tags.id}}">{{tags.name}}</a></li>
+    <li><a href="tags/{{tag.id}}">{{tag.name}}</a></li>
     {% endfor %}
 </ul>
 

@@ -32,6 +32,13 @@
 
     </div>
 
+    {% for tag in tags %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" id="tag_{{tag.id}}" name="tags" type="checkbox" value="{{tag.id}}">
+        <label class="form-check-label" for="tag_{{tag.id}}">{{tag.name}}</label>
+    </div>
+    {% endfor %}
+
 </form>
 <a href="/users/{{ user.id }}" class="btn btn-info">Cancel</a>
 </div>
