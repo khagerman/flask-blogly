@@ -93,12 +93,22 @@ class PostTesting(TestCase):
 
         db.session.rollback()
 
+    def test_add_tag(self):
+        with app.test_client() as client:
+            """Test adding a new tag"""
+            d = {"name": "funny"}
+            resp = client.post(f"/tags/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("funny", html)
+
     def test_add_post(self):
         with app.test_client() as client:
             """test creation of new post and redirect"""
             d = {
                 "title": "well hello there",
                 "content": "I am a test person. I test things. ",
+                "tags": 1,
             }
             resp = client.post(
                 f"/users/{self.id}/posts/new", data=d, follow_redirects=True
@@ -122,4 +132,5 @@ class PostTesting(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("well bye", html)
+
             self.assertNotIn("Test Post", html)
