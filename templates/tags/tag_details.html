@@ -13,10 +13,9 @@
     <form class="col-1" action="/tags/{{tag.id}}/edit">
         <button class="btn btn-success ">Edit</button>
     </form>
-    <form class="col-1" action="/tags/{{tag.id}}/delete" method="POST">
-
-        <button class="btn btn-danger ">Delete</button>
+    <form class="col-1" action="/tags/{{tag.id}}/delete">
+        <button class="btn btn-danger">Delete</button>
     </form>
-    <p class="col-2"><a class="btn btn-primary" href="/tags">Go Back</a></p>
+    <p class="col-2"><a class="btn btn-primary" href="/tags">Back to all tags</a></p>
 </div>
 {% endblock %}

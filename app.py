@@ -193,17 +193,20 @@ def tag_edit_form(id):
 @app.route("/tags/<int:id>/edit", methods=["POST"])
 def edit_tag(id):
     """Show a page to edit tag"""
-    tag = Post.query.get_or_404(id)
+    tag = Tag.query.get_or_404(id)
     tag.name = request.form["name"]
+    post_ids = [int(num) for num in request.form.getlist("posts")]
+    tag.posts = Post.query.filter(Post.id.in_(post_ids)).all()
     db.session.add(tag)
     db.session.commit()
     return redirect("/tags")
 
 
-@app.route("/tagss/<int:id>/delete", methods=["POST"])
+@app.route("/tags/<int:id>/delete", methods=["POST"])
 def delete_tag(id):
     """delete post from db"""
     tag = Post.query.get_or_404(id)
     db.session.delete(tag)
     db.session.commit()
-    return redirect("/tags")
+
+    return redirect("/tags/")

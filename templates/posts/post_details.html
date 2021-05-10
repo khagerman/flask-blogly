@@ -17,7 +17,8 @@
     {% for tag in post.tags %}
     <a href="/tags/{{ tag.id }}"><i class="btn btn-outline-info p-1">{{ tag.name }}</i></a>
     {% endfor %}
-
+    {%else%}
+    <p><a class="btn btn-primary" href="/tags/new">Add Tag</a></p>
     {% endif %}
 </div>
 <div class="row">

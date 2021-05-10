@@ -50,7 +50,9 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     name = db.Column(db.String(20), nullable=False, unique=True)
-    posts = db.relationship("Post", secondary="post_tags", backref="tags")
+    posts = db.relationship(
+        "Post", secondary="post_tags", cascade="all,delete", backref="tags"
+    )
 
 
 class PostTag(db.Model):
